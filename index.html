@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="SPLOX Dispatch &amp; Logistics. Reliable dispatch. Smarter coordination. On-time delivery.">
+<title>SPLOX Dispatch & Logistics</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: left-aligned hero beside a live-style dispatch board, then services, a four-step run sheet, and a request builder. Single dark look matching the SPLOX banner. */
+:root {
+  --bg: #030406;
+  --surface: #0a0d13;
+  --line: #1a2030;
+  --fg: #ffffff;
+  --muted: #a4abb9;
+  --blue: #2563eb;
+  --blue-text: #5b8cf5;
+  --ok: #3ecf8e;
+  --warn: #f0b13a;
+  --display: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--blue-text); outline-offset: 3px; }
+.wrap { max-width: 1120px; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-height: 1.1; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--blue-text); }
+
+/* header */
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.brand { display: flex; flex-direction: column; text-decoration: none; line-height: 1; }
+.brand b { font-family: var(--display); font-weight: 800; font-size: 30px; letter-spacing: .02em; color: var(--blue); }
+.brand span { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+nav { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+nav a { text-decoration: none; color: var(--muted); font-size: 14px; }
+nav a:hover { color: var(--fg); }
+.btn { display: inline-block; background: var(--blue); color: #fff; border: 0; border-radius: 6px; padding: 12px 20px; font: 500 15px var(--body); text-decoration: none; cursor: pointer; }
+.btn:hover { background: #1d4fd1; }
+.btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--fg); }
+.btn.ghost:hover { border-color: var(--blue); background: transparent; }
+nav .btn { color: #fff; padding: 9px 16px; font-size: 14px; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 48px; align-items: center; padding-block: 72px 80px; }
+.hero h1 { font-size: clamp(40px, 6vw, 68px); font-weight: 800; letter-spacing: -.01em; margin-top: 16px; }
+.hero p.lede { color: var(--muted); font-size: 18px; max-width: 46ch; margin: 20px 0 32px; }
+.rule { width: 72px; height: 2px; background: var(--blue); margin-top: 28px; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* dispatch board */
+.board { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.board-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.board-head i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); margin-right: 8px; }
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 460px; }
+th { text-align: left; font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 18px; }
+td { padding: 13px 18px; border-top: 1px solid var(--line); white-space: nowrap; }
+td.id, td.eta { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+td.id { color: var(--blue-text); }
+.pill { display: inline-block; font: 500 12px var(--mono); padding: 3px 10px; border-radius: 99px; border: 1px solid currentColor; }
+.pill.go { color: var(--ok); }
+.pill.hold { color: var(--warn); }
+.pill.new { color: var(--blue-text); }
+.board-foot { padding: 12px 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+
+/* sections */
+section { padding-block: 72px; border-top: 1px solid var(--line); }
+.sec-head { max-width: 640px; margin-bottom: 40px; }
+.sec-head h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; margin-top: 12px; }
+.sec-head p { color: var(--muted); margin: 14px 0 0; }
+
+.services { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.svc { background: var(--bg); padding: 28px; min-width: 0; }
+.svc h3 { font-size: 20px; font-weight: 700; }
+.svc p { color: var(--muted); margin: 10px 0 0; font-size: 15px; }
+
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { counter-increment: s; border-top: 2px solid var(--blue); padding-top: 16px; min-width: 0; }
+.steps li::before { content: "Step " counter(s); font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--blue-text); }
+.steps h3 { font-size: 19px; font-weight: 700; margin: 8px 0 6px; }
+.steps p { color: var(--muted); margin: 0; font-size: 15px; }
+
+/* request builder */
+.request { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+label { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+input, textarea { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; color: var(--fg); font: 400 15px var(--body); padding: 11px 12px; width: 100%; }
+input:focus, textarea:focus { border-color: var(--blue); outline: none; }
+textarea { resize: vertical; min-height: 84px; }
+.out { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.out pre { margin: 0; font: 400 13px/1.7 var(--mono); white-space: pre-wrap; word-break: break-word; color: var(--fg); min-height: 150px; }
+.out small { color: var(--muted); }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; grid-column: 1 / -1; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px 40px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+footer b { color: var(--blue); font-family: var(--display); letter-spacing: .02em; }
+
+@media (max-width: 860px) {
+  .hero, .request { grid-template-columns: 1fr; }
+  .hero { padding-block: 48px 56px; gap: 36px; }
+  section { padding-block: 56px; }
+}
+@media (max-width: 520px) {
+  form { grid-template-columns: 1fr; }
+  nav { gap: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#top" id="top"><b>SPLOX</b><span>Dispatch &amp; Logistics</span></a>
+    <nav aria-label="Main">
+      <a href="#services">Services</a>
+      <a href="#process">How it works</a>
+      <a class="btn" href="#request">Request a dispatch</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Dispatch &amp; Logistics</div>
+      <h1>Moving Business Forward.</h1>
+      <div class="rule"></div>
+      <p class="lede">Reliable dispatch. Smarter coordination. On-time delivery. SPLOX puts the right driver on the right load and keeps you informed until the freight is signed for.</p>
+      <div class="cta">
+        <a class="btn" href="#request">Request a dispatch</a>
+        <a class="btn ghost" href="#services">See services</a>
+      </div>
+    </div>
+
+    <div class="board" aria-label="Sample dispatch board">
+      <div class="board-head"><span><i></i>Dispatch board</span><span>Sample data</span></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Load</th><th>Lane</th><th>Status</th><th>ETA</th></tr></thead>
+          <tbody>
+            <tr><td class="id">SX-1042</td><td>Newark, NJ → Boston, MA</td><td><span class="pill go">In transit</span></td><td class="eta">14:30</td></tr>
+            <tr><td class="id">SX-1043</td><td>Atlanta, GA → Orlando, FL</td><td><span class="pill new">Assigned</span></td><td class="eta">16:15</td></tr>
+            <tr><td class="id">SX-1044</td><td>Dallas, TX → Houston, TX</td><td><span class="pill go">In transit</span></td><td class="eta">17:45</td></tr>
+            <tr><td class="id">SX-1045</td><td>Chicago, IL → Detroit, MI</td><td><span class="pill hold">At dock</span></td><td class="eta">19:00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="board-foot">Example loads shown for illustration.</div>
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="sec-head">
+      <div class="eyebrow">Services</div>
+      <h2>Everything between pickup and proof of delivery.</h2>
+    </div>
+    <div class="services">
+      <div class="svc"><h3>Load dispatch</h3><p>We match each load to an available, qualified driver and confirm pickup windows before wheels roll.</p></div>
+      <div class="svc"><h3>Route coordination</h3><p>Stops are sequenced around dock hours, traffic and hours-of-service limits to protect your delivery time.</p></div>
+      <div class="svc"><h3>Live status updates</h3><p>You hear from us at pickup, in transit and at delivery, so nobody has to chase a driver for an ETA.</p></div>
+      <div class="svc"><h3>Carrier and driver support</h3><p>Rate confirmations, paperwork and check calls handled in one place, so drivers can stay focused on the road.</p></div>
+      <div class="svc"><h3>Same-day requests</h3><p>Urgent freight gets priority assignment. Send the details and we start finding a truck right away.</p></div>
+      <div class="svc"><h3>Delivery confirmation</h3><p>Signed proof of delivery is collected and sent to you as soon as the load is received.</p></div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="sec-head">
+      <div class="eyebrow">How it works</div>
+      <h2>From request to signed delivery in four steps.</h2>
+    </div>
+    <ol class="steps">
+      <li><h3>Send the load</h3><p>Pickup, drop-off, timing and freight details.</p></li>
+      <li><h3>We assign</h3><p>A driver is matched and the pickup window is confirmed.</p></li>
+      <li><h3>We coordinate</h3><p>Check calls and route changes are handled by dispatch.</p></li>
+      <li><h3>You receive</h3><p>Delivery is confirmed and paperwork follows.</p></li>
+    </ol>
+  </section>
+
+  <section id="request">
+    <div class="sec-head">
+      <div class="eyebrow">Request a dispatch</div>
+      <h2>Tell us what needs to move.</h2>
+      <p>Fill in the load details and copy the summary to send to the SPLOX dispatch desk.</p>
+    </div>
+    <div class="request">
+      <form id="req" autocomplete="off">
+        <div class="field"><label for="name">Name</label><input id="name" type="text" placeholder="Your name"></div>
+        <div class="field"><label for="company">Company</label><input id="company" type="text" placeholder="Company"></div>
+        <div class="field"><label for="pickup">Pickup</label><input id="pickup" type="text" placeholder="City, state"></div>
+        <div class="field"><label for="drop">Drop-off</label><input id="drop" type="text" placeholder="City, state"></div>
+        <div class="field full"><label for="when">Pickup date and time</label><input id="when" type="text" placeholder="e.g. Tomorrow, 8:00 AM"></div>
+        <div class="field full"><label for="details">Freight details</label><textarea id="details" placeholder="Weight, pallet count, equipment type, special instructions"></textarea></div>
+        <div class="actions"><button class="btn" type="submit">Build summary</button></div>
+      </form>
+      <div class="out" aria-live="polite">
+        <div class="eyebrow">Request summary</div>
+        <pre id="summary">Fill in the form and choose Build summary.</pre>
+        <div class="cta"><button class="btn ghost" type="button" id="copy">Copy summary</button><small id="msg"></small></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span><b>SPLOX</b> Dispatch &amp; Logistics</span>
+    <span>Moving Business Forward.</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById("req");
+  var out = document.getElementById("summary");
+  var msg = document.getElementById("msg");
+  var ids = ["name", "company", "pickup", "drop", "when", "details"];
+  var labels = { name: "Name", company: "Company", pickup: "Pickup", drop: "Drop-off", when: "Pickup time", details: "Freight" };
+  function build() {
+    var lines = ["SPLOX dispatch request"];
+    ids.forEach(function (id) {
+      var v = document.getElementById(id).value.trim();
+      if (v) lines.push(labels[id] + ": " + v);
+    });
+    out.textContent = lines.length > 1 ? lines.join("\n") : "Add at least one detail, then choose Build summary.";
+    msg.textContent = "";
+  }
+  form.addEventListener("submit", function (e) { e.preventDefault(); build(); });
+  document.getElementById("copy").addEventListener("click", function () {
+    var text = out.textContent;
+    function done(ok) { msg.textContent = ok ? "Copied." : "Select the text above to copy it."; }
+    try {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    } catch (err) { done(false); }
+  });
+})();
+</script>
+</body>
+</html>
